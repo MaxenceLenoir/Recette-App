@@ -28,7 +28,8 @@ class App extends Component {
 
   ajouterRecette = recette => {
     const recettes = { ...this.state.recettes }
-    recettes[`recette-${Date.now()}`]
+    recettes[`recette-${Date.now()}`] = recette
+    this.setState({ recettes })
   }
 
   chargerExemple = () => this.setState({ recettes })
@@ -43,6 +44,7 @@ class App extends Component {
           { cards }
         </div>
         <Admin
+          ajouterRecette={this.ajouterRecette}
           chargerExemple={this.chargerExemple} />
       </div>
     )
