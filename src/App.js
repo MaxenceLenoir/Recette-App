@@ -2,20 +2,48 @@ import React, { Component } from 'react'
 // CSS
 import './App.css'
 
+import Header from './components/Header'
+import recettes from './recettes'
+import Card from './components/Card'
+import Admin from './components/Admin'
+
+import base from './base'
+
 class App extends Component {
   state = {
-    pseudo: this.props.match.params.pseudo
+    pseudo: this.props.match.params.pseudo,
+    recettes: {}
   }
 
+  componentDidMount() {
+    this.ref = base.syncState(`/${this.state.pseudo}/recettes`, {
+      context: this,
+      state: 'recettes'
+    })
+  }
+
+  componentWillUnmount() {
+    base.removeBinding(this.ref)
+  }
+
+  ajouterRecette = recette => {
+    const recettes = { ...this.state.recettes }
+    recettes[`recette-${Date.now()}`]
+  }
+
+  chargerExemple = () => this.setState({ recettes })
+
   render () {
+    const cards = Object.keys(this.state.recettes)
+      .map(key => <Card key={key} details={this.state.recettes[key]} />)
     return (
       <div className='box'>
-        <h1>Bonjour {this.state.pseudo}</h1>
+        <Header pseudo={this.state.pseudo} />
         <div className='cards'>
-          <div className='card'>
-            <h2>Une Carte</h2>
-          </div>
+          { cards }
         </div>
+        <Admin
+          chargerExemple={this.chargerExemple} />
       </div>
     )
   }
