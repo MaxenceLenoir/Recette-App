@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 // CSS
 import './App.css'
 
@@ -8,28 +9,48 @@ import Admin from './components/Admin'
 
 import withFirebase from './hoc/withFirebase'
 
-const App = (props) => {
+import ColorContext from './components/color'
 
-  const cards = Object.keys(props.recettes)
-    .map(key => <Card key={key} details={props.recettes[key]} />)
+const App = ({
+  match,
+  recettes,
+  ajouterRecette,
+  majRecette,
+  supprimerRecette,
+  chargerExemple }) => {
+
+  const cards = Object.keys(recettes)
+    .map(key => <Card key={key} details={recettes[key]} />)
     
   return (
-    <div className='box'>
-      <Header pseudo={props.match.params.pseudo} />
-      <div className='cards'>
-        { cards }
+    <ColorContext>
+      <div className='box'>
+        <Header pseudo={match.params.pseudo} />
+        <div className='cards'>
+          { cards }
+        </div>
+        <Admin
+          pseudo={match.params.pseudo}
+          recettes={recettes}
+          majRecette={majRecette}
+          ajouterRecette={ajouterRecette}
+          supprimerRecette={supprimerRecette}
+          chargerExemple={chargerExemple} />
       </div>
-      <Admin
-        pseudo={props.match.params.pseudo}
-        recettes={props.recettes}
-        majRecette={props.majRecette}
-        ajouterRecette={props.ajouterRecette}
-        supprimerRecette={props.supprimerRecette}
-        chargerExemple={props.chargerExemple} />
-    </div>
+    </ColorContext>
   )
 }
 
+App.propTypes = {
+  match: PropTypes.object.isRequired,
+  recettes: PropTypes.object.isRequired,
+  ajouterRecette: PropTypes.func.isRequired,
+  majRecette: PropTypes.func.isRequired,
+  supprimerRecette: PropTypes.func.isRequired,
+  chargerExemple: PropTypes.func.isRequired
+}
+
 const WrappedComponent = withFirebase(App)
+
 
 export default WrappedComponent

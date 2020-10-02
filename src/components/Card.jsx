@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { ColorContext } from './color'
+
 const Card = ({ details }) => {
   const ingredients = details.ingredients
     .split(',')
@@ -18,22 +20,26 @@ const Card = ({ details }) => {
   }
 
   return (
-    <div>
-      <div className="card">
-        <div className="image">
-          <img src={requireImage(details.image)} alt={details.nom} />
-        </div>
-        <div className="recette">
-          <h2>{details.nom}</h2>
-          <ul className="liste-ingredients">
-            {ingredients}
-          </ul>
-          <ol className="liste-instructions">
-            {instructions}
-          </ol>
+    <ColorContext.Consumer>
+    {context => (
+      <div>
+        <div className="card">
+          <div className="image">
+            <img src={requireImage(details.image)} alt={details.nom} />
+          </div>
+          <div className="recette">
+            <h2 style={{ color: context.state.color }}>{details.nom}</h2>
+            <ul className="liste-ingredients">
+              {ingredients}
+            </ul>
+            <ol className="liste-instructions">
+              {instructions}
+            </ol>
+          </div>
         </div>
       </div>
-    </div>
+    )}
+    </ColorContext.Consumer>
   )
 }
 
